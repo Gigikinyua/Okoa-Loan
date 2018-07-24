@@ -1,6 +1,7 @@
 package com.groupwork.kinyua.okoa_loan.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -90,6 +91,8 @@ public class MainActivity extends AppCompatActivity{
     public void logOut() {
         auth.signOut();
 
+        phonePref("");
+
         FirebaseAuth.AuthStateListener authStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -101,7 +104,12 @@ public class MainActivity extends AppCompatActivity{
             }
         };
     }
-
+    public void phonePref(String phone){
+        SharedPreferences sharedPreferences=getSharedPreferences("login",MODE_PRIVATE);
+        SharedPreferences.Editor editor=sharedPreferences.edit();
+        editor.putString("phone",phone);
+        editor.commit();
+    }
 
     @Override
     public void onBackPressed() {

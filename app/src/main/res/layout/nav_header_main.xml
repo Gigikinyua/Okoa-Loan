@@ -20,8 +20,8 @@
         android:text="Okoa Loan"
         android:textAlignment="viewEnd"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textColor="@android:color/background_dark"
-        android:textSize="30sp"
+        android:textColor="#FFF"
+        android:textSize="36sp"
         android:textStyle="bold" />
 
 </LinearLayout>

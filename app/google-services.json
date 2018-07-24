@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "674543855551",
+    "firebase_url": "https://okoa-loan-5e20a.firebaseio.com",
+    "project_id": "okoa-loan-5e20a",
+    "storage_bucket": "okoa-loan-5e20a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:674543855551:android:294c4e4fd9f54fc6",
+        "android_client_info": {
+          "package_name": "com.groupwork.kinyua.okoa_loan"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "674543855551-6pfd50c2mt55p5robcm25hc6tdk47534.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.groupwork.kinyua.okoa_loan",
+            "certificate_hash": "ff198ce6fd37891da7cf42b6b365e409caa049a4"
+          }
+        },
+        {
+          "client_id": "674543855551-rbcq9bu7cpv9oq47gc36duroqn7gl10t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCRNojimqxhgtu-kR_yS3ULgujF5zkYtMk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "674543855551-rbcq9bu7cpv9oq47gc36duroqn7gl10t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

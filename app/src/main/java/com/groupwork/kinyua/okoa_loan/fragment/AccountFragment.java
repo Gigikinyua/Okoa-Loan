@@ -2,7 +2,7 @@ package com.groupwork.kinyua.okoa_loan.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +27,7 @@ public class AccountFragment extends Fragment {
         // Inflate the layout for this fragment
         view= inflater.inflate(R.layout.fragment_account, container, false);
 
-        LinearLayout profilebutton = (LinearLayout) view.findViewById(R.id.profileButton);
+        LinearLayout profilebutton = view.findViewById(R.id.profileButton);
         profilebutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -35,7 +35,7 @@ public class AccountFragment extends Fragment {
             }
         });
 
-        LinearLayout paybutton = (LinearLayout) view.findViewById(R.id.PayButton);
+        LinearLayout paybutton = view.findViewById(R.id.PayButton);
         paybutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -43,7 +43,7 @@ public class AccountFragment extends Fragment {
             }
         });
 
-        LinearLayout historybutton = (LinearLayout) view.findViewById(R.id.HistoryButton);
+        LinearLayout historybutton = view.findViewById(R.id.HistoryButton);
         historybutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -29,7 +29,7 @@ import com.groupwork.kinyua.okoa_loan.activity.MainActivity;
 
 import java.util.concurrent.TimeUnit;
 
-public class PhoneAuthActivity extends AppCompatActivity implements  View.OnClickListener {
+public class PhoneAuthActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = "PhoneAuth";
     private boolean mVerificationInProgress = false;
@@ -44,9 +44,10 @@ public class PhoneAuthActivity extends AppCompatActivity implements  View.OnClic
     private static final int STATE_SIGNIN_SUCCESS = 6;
 
 
-    private EditText phoneText;
-    private Button resendButton, sendButton;
-    private TextView statusText;
+    private EditText phoneText, codeEdt;
+    private Button verifyButton;
+
+    private TextView statusText, resendButton;
 
     private String phoneVerificationID;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks verificationCallbacks;
@@ -60,15 +61,21 @@ public class PhoneAuthActivity extends AppCompatActivity implements  View.OnClic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.phone_auth);
 
-        phone="";
-        phone=getPhone();
+        // Restore instance state
+        if (savedInstanceState != null) {
+            onRestoreInstanceState(savedInstanceState);
+        }
+
+        phone = "";
+        phone = getPhone();
 
         phoneText = findViewById(R.id.phoneEditText);
-        sendButton = findViewById(R.id.codeButton);
+        codeEdt = findViewById(R.id.codeEditText);
+        verifyButton = findViewById(R.id.codeButton);
         resendButton = findViewById(R.id.ResendcodeButton);
         statusText = findViewById(R.id.statusText);
 
-        sendButton.setOnClickListener(this);
+        verifyButton.setOnClickListener(this);
         resendButton.setOnClickListener(this);
         statusText.setText("Signed out");
 
@@ -77,13 +84,12 @@ public class PhoneAuthActivity extends AppCompatActivity implements  View.OnClic
 
         verificationCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             @Override
-            public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
+            public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
                 Log.d(TAG, "onVerificationCompleted: " + phoneAuthCredential);
                 mVerificationInProgress = false;
 
                 updateUI(STATE_VERIFY_SUCCESS, phoneAuthCredential);
                 signInWithPhoneAuthCredential(phoneAuthCredential);
-
             }
 
             @Override
@@ -104,7 +110,7 @@ public class PhoneAuthActivity extends AppCompatActivity implements  View.OnClic
             }
 
             @Override
-            public void onCodeSent(String verificationId, PhoneAuthProvider.ForceResendingToken token) {
+            public void onCodeSent(@NonNull String verificationId, @NonNull PhoneAuthProvider.ForceResendingToken token) {
                 Log.d(TAG, "onCodeSent: " + verificationId);
 
                 phoneVerificationID = verificationId;
@@ -127,13 +133,13 @@ public class PhoneAuthActivity extends AppCompatActivity implements  View.OnClic
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(KEY_VERIFY_IN_PROGRESS, mVerificationInProgress);
     }
 
     @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         mVerificationInProgress = savedInstanceState.getBoolean(KEY_VERIFY_IN_PROGRESS);
     }
@@ -179,19 +185,9 @@ public class PhoneAuthActivity extends AppCompatActivity implements  View.OnClic
                             Log.d(TAG, "signInWithCredential:success");
 
                             FirebaseUser user = task.getResult().getUser();
-//                            code update
 
-
-
-//                            ending of code update
-
-
-
-
-
-                            // [START_EXCLUDE]
                             updateUI(STATE_SIGNIN_SUCCESS, user);
-                            // [END_EXCLUDE]
+
                         } else {
                             // Sign in failed, display a message and update the UI
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
@@ -239,18 +235,26 @@ public class PhoneAuthActivity extends AppCompatActivity implements  View.OnClic
         switch (uiState) {
             case STATE_INITIALIZED:
                 // Initialized state, show only the phone number field and start button
-                enableViews(sendButton, phoneText);
-                disableViews(resendButton);
-                statusText.setText(null);
+                enableViews(verifyButton, phoneText);
+                disableViews(resendButton, codeEdt,statusText);
+                statusText.setVisibility(View.GONE);
+                break;
+            case STATE_CODE_SENT:
+                // Code sent state, show the verification field, the
+                verifyButton.setText("Verify Phone Number");
+                phoneText.setVisibility(View.GONE);
+                enableViews(codeEdt, resendButton, verifyButton);
+//                disableViews(phoneText);
+                statusText.setText("OTP code sent. Check your messages.");
                 break;
             case STATE_VERIFY_FAILED:
                 // Verification has failed, show all options
-                enableViews(sendButton, resendButton, phoneText);
-                statusText.setText("Verification failed");
+                enableViews(verifyButton, codeEdt, resendButton);
+                statusText.setText("Verification failed.");
                 break;
             case STATE_VERIFY_SUCCESS:
                 // Verification has succeeded, proceed to firebase sign in
-                disableViews(sendButton, resendButton, phoneText);
+                disableViews(verifyButton, phoneText);
 
                 statusText.setText("verification successful");
 
@@ -268,25 +272,24 @@ public class PhoneAuthActivity extends AppCompatActivity implements  View.OnClic
             //            // Signed out
 
             phoneText.setVisibility(View.VISIBLE);
-            sendButton.setVisibility(View.VISIBLE);
+            verifyButton.setVisibility(View.VISIBLE);
 
             statusText.setText("signed out");
         } else {
             phonePref(phoneText.getText().toString().trim());
 
-            try{
-                if(!phone.equals("")){
+            try {
+                if (!phone.equals("")) {
                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
                 } else {
                     startActivity(new Intent(getApplicationContext(), SignupActivity.class));
                     finish();
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
                 startActivity(new Intent(getApplicationContext(), SignupActivity.class)
                 );
                 finish();
             }
-
 
 
         }
@@ -296,8 +299,6 @@ public class PhoneAuthActivity extends AppCompatActivity implements  View.OnClic
         String phoneNumber = phoneText.getText().toString();
         if (TextUtils.isEmpty(phoneNumber)) {
             phoneText.setError("Invalid phone number.");
-
-
         }
         return true;
     }
@@ -330,21 +331,21 @@ public class PhoneAuthActivity extends AppCompatActivity implements  View.OnClic
     }
 
     //code to store the sharedpreference
-    public void phonePref(String phone){
-        SharedPreferences sharedPreferences=getSharedPreferences("login",MODE_PRIVATE);
-        SharedPreferences.Editor editor=sharedPreferences.edit();
-        editor.putString("phone",phone);
+    public void phonePref(String phone) {
+        SharedPreferences sharedPreferences = getSharedPreferences("login", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("phone", phone);
         editor.commit();
     }
 
     //method to get the phone
-    public String  getPhone(){
+    public String getPhone() {
         try {
             SharedPreferences sharedPreferences = getSharedPreferences("login", MODE_PRIVATE);
             String myPhone = sharedPreferences.getString("phone", null);
-            return  myPhone;
-        }catch (Exception e){
-            Toast.makeText(this, "error occured", Toast.LENGTH_SHORT).show();
+            return myPhone;
+        } catch (Exception e) {
+            Toast.makeText(this, "error occurred", Toast.LENGTH_SHORT).show();
         }
         return "failed";
     }

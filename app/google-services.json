@@ -15,11 +15,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "674543855551-6pfd50c2mt55p5robcm25hc6tdk47534.apps.googleusercontent.com",
+          "client_id": "674543855551-rm60ksaptqb32hl5q5klno664a0p6s28.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.groupwork.kinyua.okoa_loan",
-            "certificate_hash": "ff198ce6fd37891da7cf42b6b365e409caa049a4"
+            "certificate_hash": "13b3103b43625f311e820dcb5ff0435e48045a84"
           }
         },
         {
@@ -33,20 +33,13 @@
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 2,
           "other_platform_oauth_client": [
             {
               "client_id": "674543855551-rbcq9bu7cpv9oq47gc36duroqn7gl10t.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
-        },
-        "ads_service": {
-          "status": 2
         }
       }
     }
